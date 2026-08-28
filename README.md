@@ -95,4 +95,5 @@ CG position produced a smaller but measurable effect, while wing pitching moment
 
 The altitude model additionally demonstrates the distinction between **true airspeed and calibrated airspeed**: as altitude increases and air density decreases, stall TAS increases while stall CAS remains approximately constant.
 
-![Stall Speed Sensitivity Analysis](images/sensitivity_analysis.png)![Stall Speed Sensitivity Analysis](desktop/sensitivity_analysis.png)
+<img width="1759" height="927" alt="image" src="https://github.com/user-attachments/assets/2e4ade77-c153-4a6e-bba7-ff5df61114ba" />
+
