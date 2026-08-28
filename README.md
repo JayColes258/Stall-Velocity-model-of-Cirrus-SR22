@@ -1,69 +1,98 @@
-This project investigated the factors governing the stall speed of a Cirrus SR22, beginning with the fundamental relationship
+## Cirrus SR22 Stall Speed Model
 
-\[
-V_S = \sqrt{\frac{2W}{\rho S C_{L,\max}}}.
-\]
+This project investigates the factors governing the stall speed of a Cirrus SR22, beginning with the fundamental stall-speed relationship:
 
-The initial model was extended to account for centre-of-gravity position, wing pitching moment, engine thrust, and propeller efficiency. An ISA atmospheric model was also implemented to calculate temperature, pressure, and air density as functions of altitude, allowing the stall condition to be expressed in terms of true airspeed (TAS), calibrated airspeed (CAS), and Mach number.
+$$
+V_S = \sqrt{\frac{2W}{\rho S C_{L,\max}}}
+$$
 
-At the baseline sea-level condition of \(W = 3400\,\mathrm{lbf}\), \(C_{L,\max} = 1.45\), and the forward CG position, the model predicted a stall speed of \(68.40\,\mathrm{kt}\) TAS and \(68.39\,\mathrm{kt}\) CAS, corresponding to a Mach number of \(0.103\).
+where:
 
-A normalised sensitivity analysis was then performed to quantify the influence of individual model parameters. Aircraft weight produced a sensitivity coefficient of
+- $V_S$ = stall speed
+- $W$ = aircraft weight
+- $\rho$ = air density
+- $S$ = wing area
+- $C_{L,\max}$ = maximum lift coefficient
 
-\[
-S_W = +0.540,
-\]
+The model extends this basic relationship to account for **centre-of-gravity position, wing pitching moment, engine thrust, and propeller efficiency**.
 
-indicating that a \(10\%\) increase in aircraft weight resulted in approximately a \(5.4\%\) increase in predicted stall speed. Maximum lift coefficient produced a sensitivity coefficient of
+An ISA atmospheric model is also implemented to calculate temperature, pressure, air density, and local speed of sound as functions of altitude. This allows stall conditions to be evaluated in terms of **TAS, CAS, and Mach number**.
 
-\[
-S_{C_{L,\max}} = -0.503,
-\]
+### Baseline Conditions
 
-meaning that a \(10\%\) increase in \(C_{L,\max}\) resulted in approximately a \(5.0\%\) decrease in predicted stall speed.
+| Parameter | Value |
+|---|---:|
+| Aircraft | Cirrus SR22 |
+| Weight | 3400 lbf |
+| Wing area | 144.9 ft² |
+| Maximum lift coefficient | 1.45 |
+| Wing pitching coefficient | -0.06 |
+| Propeller efficiency | 0.65 |
+| Engine power | 310 bhp |
+| CG position | 19.2% chord |
+| Stall angle of attack | 16° |
+| Altitude | 0 m |
+| Air density | 1.225 kg/m³ |
 
-These results are consistent with the theoretical dependence
+The baseline model predicted:
 
-\[
-V_S \propto \sqrt{\frac{W}{C_{L,\max}}},
-\]
+| Output | Result |
+|---|---:|
+| Stall TAS | 68.40 kt |
+| Stall CAS | 68.39 kt |
+| Stall Mach | 0.103 |
 
-for which the expected normalised sensitivities are approximately
+## Sensitivity Analysis
 
-\[
-S_W = +0.5,
+A normalised sensitivity analysis was performed to determine which parameters have the greatest influence on predicted stall speed.
+
+The analysis produced:
+
+| Parameter | Normalised Sensitivity |
+|---|---:|
+| Weight | +0.540 |
+| $C_{L,\max}$ | -0.503 |
+| $C_{m,W}$ | +0.006 |
+| Propeller efficiency | -0.045 |
+
+A weight sensitivity of **+0.540** means that a 10% increase in aircraft weight produces approximately a **5.4% increase in stall speed**.
+
+Similarly, a $C_{L,\max}$ sensitivity of **-0.503** means that a 10% increase in maximum lift coefficient produces approximately a **5.0% reduction in stall speed**.
+
+These results closely agree with the theoretical relationship:
+
+$$
+V_S \propto \sqrt{\frac{W}{C_{L,\max}}}
+$$
+
+which predicts approximate normalised sensitivities of:
+
+$$
+S_W = +0.5
 \qquad
-S_{C_{L,\max}} = -0.5.
-\]
+S_{C_{L,\max}} = -0.5
+$$
 
-The remaining parameters had substantially smaller effects under the assumptions of the model. Propeller efficiency had a normalised sensitivity of approximately
+The model therefore reproduces the expected theoretical dependence while also accounting for additional aerodynamic and propulsion effects.
 
-\[
-S_{\eta_p} = -0.045,
-\]
+### Centre-of-Gravity Effect
 
-while the wing pitching-moment coefficient produced a sensitivity of approximately
+The model was also evaluated across the permitted CG range.
 
-\[
-S_{C_{m,W}} = 0.006.
-\]
+- **Forward CG:** 68.40 kt
+- **Aft CG:** 67.32 kt
+- **Change:** -1.57%
 
-The effect of centre-of-gravity position was also investigated. Moving the CG from its forward to aft limit reduced the predicted stall speed from
+Moving the CG from its forward to aft limit therefore reduced predicted stall speed by approximately **1.08 kt**.
 
-\[
-68.40\,\mathrm{kt}
-\]
+## Key Findings
 
-to
+The sensitivity analysis identified **aircraft weight and maximum lift coefficient as the dominant parameters** governing stall speed.
 
-\[
-67.32\,\mathrm{kt},
-\]
+Weight had a positive sensitivity, meaning heavier aircraft stall at higher speeds, while increasing $C_{L,\max}$ reduced the required stall speed. These numerical sensitivities closely matched the theoretical square-root dependence predicted by the fundamental stall-speed equation.
 
-corresponding to a reduction of approximately
+CG position produced a smaller but measurable effect, while wing pitching moment and propeller efficiency produced comparatively small changes under the assumptions of the model.
 
-\[
-1.57\%.
-\]
+The altitude model additionally demonstrates the distinction between **true airspeed and calibrated airspeed**: as altitude increases and air density decreases, stall TAS increases while stall CAS remains approximately constant.
 
-The analysis therefore identified aircraft weight and maximum lift coefficient as the dominant parameters governing stall speed within the investigated conditions. Centre-of-gravity position produced a smaller but measurable effect, while pitching-moment coefficient and propeller efficiency produced comparatively small changes within the assumptions of the model.
+![Stall Speed Sensitivity Analysis](images/sensitivity_analysis.png)![Stall Speed Sensitivity Analysis](images/sensitivity_analysis.png)
